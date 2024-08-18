@@ -9,13 +9,12 @@ This project is a payment gateway service that integrates with multiple payment 
 - [Running the Application Manually](#running-the-application-manually)
 - [Running the Application Using Docker](#running-the-application-using-docker)
 - [Troubleshooting](#troubleshooting)
-- [License](#license)
 
 ## Application Structure
 
 The application follows a modular structure to maintain separation of concerns and scalability. Below is an overview of the main directories and files:
 
-\`\`\`
+```
 payment-gateway-service/
 │
 ├── cmd/
@@ -49,8 +48,11 @@ payment-gateway-service/
 ├── docker-compose.yml # Docker Compose file to orchestrate services
 ├── .env # Environment variables file
 ├── go.mod # Go module dependencies
+├── payment_gateway.diagram.png # Application structure diagram
 └── README.md # Project documentation
-\`\`\`
+```
+
+Below is a visual representation of the application structure:
 
 ![Payment Gateway Diagram](./payment_gateway.diagram.png)
 
@@ -67,16 +69,16 @@ Before running the application, ensure you have the following installed on your 
 
 ### Step 1: Clone the Repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/erik1996/payment-gateway-service
 cd payment-gateway-service
-\`\`\`
+```
 
 ### Step 2: Set Up the Environment Variables
 
 Create a `.env` file in the root of the project with the following content:
 
-\`\`\`env
+```env
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=username
@@ -91,39 +93,39 @@ ADCB_USER_ID=1
 ADCB_USER_SECRET=1111
 
 APP_HOST=http://localhost:8080
-\`\`\`
+```
 
 ### Step 3: Install Dependencies
 
 Ensure you have Go modules enabled and install the necessary dependencies:
 
-\`\`\`bash
+```bash
 go mod tidy
-\`\`\`
+```
 
 ### Step 4: Set Up the Database
 
 Start PostgreSQL and create the database:
 
-\`\`\`bash
+```bash
 psql -U erik -c "CREATE DATABASE payment_db;"
-\`\`\`
+```
 
 ### Step 5: Run Migrations
 
 Run the database migrations to set up the schema:
 
-\`\`\`bash
+```bash
 migrate -path ./internal/database/migrations -database "postgres://username:yourpassword@localhost:5432/payment_db?sslmode=disable" up
-\`\`\`
+```
 
 ### Step 6: Run the Application
 
 Finally, run the application:
 
-\`\`\`bash
+```bash
 go run cmd/main.go
-\`\`\`
+```
 
 The application will be available at `http://localhost:8080`.
 
@@ -133,16 +135,16 @@ Once the application is running, you can find the Swagger documentation at `http
 
 ### Step 1: Clone the Repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/erik1996/payment-gateway-service
 cd payment-gateway-service
-\`\`\`
+```
 
 ### Step 2: Set Up the Environment Variables
 
 Create a `.env` file in the root of the project with the following content:
 
-\`\`\`env
+```env
 DB_HOST=db
 DB_PORT=5432
 DB_USER=username
@@ -157,15 +159,15 @@ ADCB_USER_ID=1
 ADCB_USER_SECRET=1111
 
 APP_HOST=http://localhost:8080
-\`\`\`
+```
 
 ### Step 3: Build and Run the Docker Containers
 
 Use Docker Compose to build and run the containers:
 
-\`\`\`bash
+```bash
 docker-compose up --build
-\`\`\`
+```
 
 This will start the following services:
 
@@ -185,9 +187,9 @@ You can find the Swagger documentation at `http://localhost:8080/swagger/index.h
 
 To stop the application, press `Ctrl+C` and then run:
 
-\`\`\`bash
+```bash
 docker-compose down
-\`\`\`
+```
 
 This will stop and remove all the containers.
 
@@ -195,16 +197,12 @@ This will stop and remove all the containers.
 
 - **Migrations Fail on First Run:** If the migrations fail during the first run, ensure that the database service is fully up and healthy. You can run the migration command manually using Docker:
 
-  \`\`\`bash
+  ```bash
   docker-compose run migrate
-  \`\`\`
+  ```
 
 - **Database Connection Issues:** Ensure that the PostgreSQL service is running and accessible on the specified port. If you encounter issues, check the logs using:
 
-  \`\`\`bash
+  ```bash
   docker logs postgres
-  \`\`\`
-
-## License
-
-This project is licensed under the MIT License.
+  ```
