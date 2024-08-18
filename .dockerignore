@@ -1,0 +1,37 @@
+# Ignore the .git directory
+.git
+
+# Ignore Go build and cache directories
+bin/
+pkg/
+.build/
+.cache/
+
+# Ignore Go test binaries
+*.test
+
+# Ignore editor-specific files
+*.swp
+*.swo
+*.swn
+*~
+
+# Ignore Go module files not needed for the build
+vendor/
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+
+# Ignore application logs
+*.log
+
+# Ignore temporary files
+tmp/
+*.tmp
+*.bak
+
+# Ignore IDE and OS generated files
+.idea/
+.vscode/
+*.DS_Store

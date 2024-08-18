@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  main_app:
+    cmds:
+      - go run cmd/main.go
+    sources:
+      - cmd/**/*.go
+
+  adcb_service:
+    cmds:
+      - cd mock_services/adcb && go run main.go
+    sources:
+      - mock_services/adcb/**/*.go
+
+  hsbc_service:
+    cmds:
+      - cd mock_services/hsbc && go run main.go
+    sources:
+      - mock_services/hsbc/**/*.go
+
+  start:
+    cmds:
+      - task main_app
+      - task adcb_service
+      - task hsbc_service
+    parallel: true

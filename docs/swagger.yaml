@@ -1,0 +1,168 @@
+definitions:
+  payment.PaymentRequest:
+    properties:
+      amount:
+        type: number
+      country_code:
+        type: string
+      currency_code:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - amount
+    - country_code
+    - currency_code
+    - user_id
+    type: object
+info:
+  contact: {}
+paths:
+  /payment/callback/failure:
+    get:
+      description: Processes a failed payment callback and redirects to a status URL.
+      parameters:
+      - description: External ID
+        in: path
+        name: external_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Redirects to status URL
+          schema:
+            type: string
+        "400":
+          description: Error extracting external ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to handle callback
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Handles failed payment provider callbacks
+      tags:
+      - payment
+  /payment/callback/success:
+    get:
+      description: Processes a successful payment callback and redirects to a status
+        URL.
+      parameters:
+      - description: External ID
+        in: path
+        name: external_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Redirects to status URL
+          schema:
+            type: string
+        "400":
+          description: Error extracting external ID
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to handle callback
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Handles successful payment provider callbacks
+      tags:
+      - payment
+  /payment/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Processes a deposit request and returns a URL for payment.
+      parameters:
+      - description: Authorization token
+        in: header
+        name: X-AUTH-TOKEN
+        required: true
+        type: string
+      - description: Validated Payment Request
+        in: body
+        name: validatedBody
+        required: true
+        schema:
+          $ref: '#/definitions/payment.PaymentRequest'
+      - description: Example request
+        in: body
+        name: exampleRequest
+        required: true
+        schema:
+          $ref: '#/definitions/payment.PaymentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: url
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to process request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Handles deposit requests
+      tags:
+      - payment
+  /payment/withdrawal:
+    post:
+      consumes:
+      - application/json
+      description: Processes a withdrawal request and returns a URL for payment.
+      parameters:
+      - description: Authorization token
+        in: header
+        name: X-AUTH-TOKEN
+        required: true
+        type: string
+      - description: Validated Payment Request
+        in: body
+        name: validatedBody
+        required: true
+        schema:
+          $ref: '#/definitions/payment.PaymentRequest'
+      - description: Example request
+        in: body
+        name: exampleRequest
+        required: true
+        schema:
+          $ref: '#/definitions/payment.PaymentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: url
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to process request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Handles withdrawal requests
+      tags:
+      - payment
+swagger: "2.0"

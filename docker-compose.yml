@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build: .
+    container_name: go_app
+    ports:
+      - "${PORT}:8080"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      adcb:
+        condition: service_started
+      hsbc:
+        condition: service_started
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  adcb:
+    build:
+      context: .
+      dockerfile: Dockerfile.adcb
+    container_name: adcb_service
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  hsbc:
+    build:
+      context: .
+      dockerfile: Dockerfile.hsbc
+    container_name: hsbc_service
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  migrate:
+    image: migrate/migrate
+    command: -path /migrations -database "postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable" up
+    volumes:
+      - ./internal/database/migrations:/migrations
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db:

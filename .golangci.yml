@@ -1,0 +1,27 @@
+run:
+  timeout: 2m
+  tests: false
+
+issues:
+  exclude-dirs:
+    - "mock_services"
+  exclude-files:
+    - ".*_test.go"
+
+linters:
+  enable:
+    - govet
+    - gofmt
+    - errcheck
+    - staticcheck
+    - unused
+    - ineffassign
+    - gosec
+    - exportloopref
+
+linters-settings:
+  gofmt:
+    simplify: true
+  errcheck:
+    exclude-functions:
+      - "Close"
